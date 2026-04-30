@@ -15,10 +15,10 @@ on:
           - down
       stack:
         description: The stack to deploy up or down. (Leave blank for default)
-        default: test
+        default: cloudbuildtest
 jobs:
   defang:
-    name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'test' }}
+    name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'cloudbuildtest' }}
     runs-on: ubuntu-latest
     timeout-minutes: 70
     permissions:
@@ -26,20 +26,20 @@ jobs:
       id-token: write
     concurrency:
       cancel-in-progress: false
-      group: deploy-flask-${{ github.event.inputs.stack || 'test' }}
+      group: deploy-flask-${{ github.event.inputs.stack || 'cloudbuildtest' }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
-      - name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'test' }}
+      - name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'cloudbuildtest' }}
         uses: DefangLabs/defang-github-action@v1
         with:
           command: ${{ github.event.inputs.action || 'up' }}
           project: flask
-          stack: ${{ github.event.inputs.stack || 'test' }}
+          stack: ${{ github.event.inputs.stack || 'cloudbuildtest' }}
       - name: Deployment Summary
         uses: DefangLabs/defang-github-action@v1
         with:
           command: services
           project: flask
-          stack: ${{ github.event.inputs.stack || 'test' }}
-    environment: defang-test
+          stack: ${{ github.event.inputs.stack || 'cloudbuildtest' }}
+    environment: defang-cloudbuildtest
